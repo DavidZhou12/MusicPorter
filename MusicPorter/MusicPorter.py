@@ -1,5 +1,5 @@
-import os, sndhdr, sys
-import eyed3
+import mpeg1audio
+import os, songdetails, sys
 
 def isMp3(fileName):
     if fileName.lower().endswith('.mp3'):
@@ -14,6 +14,13 @@ def GetCurrentDirectoryMp3List():
 def main():
     mp3Files = GetCurrentDirectoryMp3List()
     print(*mp3Files, sep='\n')
+    print(mp3Files[0])
+    '''
+    song = songdetails.scan(mp3Files[0])
+    
+    if song is not None:
+        print(song.artist)
+        '''
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
