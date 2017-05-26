@@ -1,6 +1,12 @@
 import os, sndhdr, sys
 import eyed3
 
+def checkMp3(path):
+    if path.lower().endswith('.mp3'):
+        return True
+    else:
+        return False
+
 def main():
     print("Hello World!")
 
