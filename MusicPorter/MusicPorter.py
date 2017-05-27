@@ -1,6 +1,6 @@
 import mutagen
-from mutagen import *
-import os, sys
+from mutagen.easyid3 import EasyID3
+import io, os, sys
 
 def isMp3(fileName):
     if fileName.lower().endswith('.mp3'):
@@ -19,10 +19,15 @@ def main():
     mp3Files = GetCurrentDirectoryMp3List()
     print(*mp3Files, sep='\n')
     try:
-        audioFile = EasyID3(mp3Files[1])
+        audioFile = EasyID3(mp3Files[0])
     except mutagen.id3.ID3NoHeaderError:
-        audioFile = mutagen.File(mp3Files[1], EasyID3=True)
+        audioFile = mutagen.File(mp3Files[0])
         audioFile.add_tags()
+    print(audioFile['title'])
+
+    with io.open("Output.txt", "w", encoding="utf-8") as file:
+        #file.write(" ".join(str(x) for x in audioFile['title']))
+        file.write(audioFile['title'][0])
 
 
 
