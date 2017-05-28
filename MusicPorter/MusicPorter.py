@@ -47,28 +47,38 @@ def getSortedList(mp3Files):
             audioFile["album"] = ["Unknown Album"]
             audioFile["artist"] = ["Unknown Artist"]
             audioFile.save(mp3FilePath, v1=2, v2_version = 3)
-
-        sortedList.append((mp3FilePath, audioFile['title'][0], audioFile['album'][0], audioFile['artist'][0]))
-        sortedList = sorted(sortedList, key=itemgetter(2, 3, 1, 0))
+        sortedList.append((mp3FilePath, audioFile["title"][0], audioFile["album"][0], audioFile["artist"][0]))
+    
+    # Multi-level sorting
+    sortedList = sorted(sortedList, key=itemgetter(2, 3, 1, 0))
         
-        # Except every item to have an ID3 tag at this point
+    # Expect every item to have an ID3 tag at this point
+    # Add track number to mp3 files based on the sorted list
+    sortedListWithTrackNumbers = []
+    trackNumber = 1
+    for item in sortedList:
+        audioFile = EasyID3(item[0])
+        audioFile["tracknumber"] = [str(trackNumber)]
+        audioFile.save(item[0], v1=2, v2_version = 3)
+        sortedListWithTrackNumbers.append((item[0], item[1], item[2], item[3], audioFile["tracknumber"][0]))
+        trackNumber += 1
 
-    return sortedList
+    return sortedListWithTrackNumbers
 
 # Expects all items in the list to have an ID3 tag with atleast: title, album, and artist
 def writeOutput(sortedList):
 
     # encoding="utf-8" accounts for text written in other languages
-    with io.open("Output.txt", "w", encoding="utf-8") as output:
-        for mp3File in sortedList:
-            output.write(audioFile['title'][0] + ' ' + audioFile['album'][0] + ' ' + audioFile['artist'][0] + '\n')
+    with io.open("Music Menu.txt", "w", encoding="utf-8") as output:
+        for item in sortedList:
+            output.write(item[4] + ' ' + item[1] + ' ' + item[2] + ' ' + item[3] + '\n')
 
 def main():
     mp3Files = GetCurrentDirectoryMp3List()
     #print(*mp3Files, sep='\n')
     sortedMp3Files = getSortedList(mp3Files)
     print(*sortedMp3Files, sep='\n');
-    #writeOutput(mp3Files)
+    writeOutput(mp3Files)
     #print(EasyID3(mp3Files[0]))
 
 if __name__ == "__main__":
