@@ -96,17 +96,16 @@ def writeOutput(sortedList):
 def transferFiles(sortedList, path):
     for item in sortedList:
         properPath = path.replace('\\', "\\\\")
-        copy2(item[0], "G:\\")
+        #copy2(item[0], "G:\\")
+        print("Copying " + item[0] + "...\n")
         copy2(item[0], properPath)
 
 def main():
     # Prepare for transfer
     print("Acquiring MP3 files within the directory...\n")
     mp3Files = GetCurrentDirectoryMp3List()
-    #print(*mp3Files, sep='\n')
     print("Sorting MP3 files within the directory...\n")
     sortedMp3Files = getSortedList(mp3Files)
-    #print(*sortedMp3Files, sep='\n');
     print("Creating list of sorted MP3 files within the directory: \"Music Menu\"\n")
     writeOutput(sortedMp3Files)
     
