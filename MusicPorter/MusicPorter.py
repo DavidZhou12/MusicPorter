@@ -5,8 +5,20 @@ from operator import itemgetter, attrgetter
 from shutil import copy2
 from codecs import decode
 
+#
+# This program analyzes mp3 files within the current directory
+# and generates ID3 tags for files that are missing an ID3 for: title, album and artist
+# A sorted list will be generated with multi-level sorting.
+# Sorting order: Album -> Artist -> Title
+# Each track will be assigned a tracking number based on it's index in the sorted list.
+# The program then transfers every mp3 to the user's input path.
+# The files will be transfered one-by-one based on the track number.
+# This is particularly useful for media player devices that plays audio tracks based
+# on time of insertion into the device.
+# 
 # Items in the mp3List are in tuples with the following order:
 # (mp3FilePath, Title, Album, Artist, Track Number)
+#
 
 def printEditableList():
     print('\n'.join(EasyID3.valid_keys.keys()))
@@ -84,20 +96,17 @@ def writeOutput(sortedList):
             if len(item[4]) > colWidth4:
                 colWidth4 = len(item[4])
         # Padding
-        padding = 2
-        colWidth1 += padding
-        colWidth2 += padding
-        colWidth4 += padding
+        colWidth1 += -94    # For lengthy titles
+        colWidth2 += -42
+        colWidth4 += 2
 
         for item in sortedList:
-            output.write(item[4].ljust(colWidth4) + ' ' + item[1].ljust(colWidth1, '.') + ' ' + item[2].ljust(colWidth2, '.') + ' ' + item[3] + '\n')
+            output.write(item[4].ljust(colWidth4) + ' ' + item[1].ljust(colWidth1, '.') + ' ' + ''.ljust(1, '\t') + ' ' + item[2].ljust(colWidth2, '.') + ' ' + ''.ljust(1, '\t') + ' ' + item[3] + '\n')
 
-# TODO -- Get path working
 def transferFiles(sortedList, path):
     for item in sortedList:
         properPath = path.replace('\\', "\\\\")
-        #copy2(item[0], "G:\\")
-        print("Copying " + item[0] + "...\n")
+        print("Copying " + item[0] + "...")
         copy2(item[0], properPath)
 
 def main():
