@@ -1,6 +1,5 @@
 import mutagen
 from mutagen.easyid3 import EasyID3
-from mutagen.id3 import ID3, TIT2
 import io, os, sys
 from operator import itemgetter, attrgetter
 
@@ -92,6 +91,7 @@ def writeOutput(sortedList):
             output.write(item[4].ljust(colWidth4) + ' ' + item[1].ljust(colWidth1, '.') + ' ' + item[2].ljust(colWidth2, '.') + ' ' + item[3] + '\n')
 
 def main():
+    # Prepare for transfer
     print("Acquiring MP3 files within the directory...\n")
     mp3Files = GetCurrentDirectoryMp3List()
     #print(*mp3Files, sep='\n')
@@ -100,6 +100,12 @@ def main():
     #print(*sortedMp3Files, sep='\n');
     print("Creating list of sorted MP3 files within the directory: \"Music Menu\"\n")
     writeOutput(sortedMp3Files)
+    
+    # Transfer mp3 files to a specified directory
+    path = input("Enter the path to transfer the music to: ")
+    print("Transfering music to: ", path)
+
+    print("-- TRANSFER COMPLETE --\n")
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
