@@ -106,6 +106,7 @@ def write_output(sorted_list):
 
 # Converts user input raw_path into unicode_path
 # Transfer files one by one
+# TODO FIX PATH ISSUE
 def transfer_files(sorted_list, raw_path):
     for item in sorted_list:
         unicode_path = raw_path.replace('\\', "\\\\")
@@ -118,15 +119,18 @@ def main():
     mp3_files = get_current_directory_mp3()
     print("Sorting MP3 files within the directory...\n")
     sorted_mp3_files = get_sorted_list(mp3_files)
-    print("Creating list of sorted MP3 files within the directory: \"Music Menu\"\n")
-    write_output(sorted_mp3_files)
+    if not sorted_mp3_files:
+        print("There are no MP3 files present in the currect directory.")
+    else:
+        print("Creating list of sorted MP3 files within the directory: \"Music Menu\"\n")
+        write_output(sorted_mp3_files)
     
-    # Transfer mp3 files to a specified directory
-    path = input("Enter the path to transfer the music to: ")
-    print("Transfering music to: ", path)
-    transfer_files(sorted_mp3_files, path)
+        # Transfer mp3 files to a specified directory
+        path = input("Enter the path to transfer the music to: ")
+        print("Transfering music to: ", path)
+        transfer_files(sorted_mp3_files, path)
 
-    print("-- TRANSFER COMPLETE --\n")
+        print("-- TRANSFER COMPLETE --\n")
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
