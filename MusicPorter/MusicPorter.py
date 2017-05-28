@@ -78,7 +78,7 @@ def main():
     #print(*mp3Files, sep='\n')
     sortedMp3Files = getSortedList(mp3Files)
     print(*sortedMp3Files, sep='\n');
-    writeOutput(mp3Files)
+    writeOutput(sortedMp3Files)
     #print(EasyID3(mp3Files[0]))
 
 if __name__ == "__main__":
