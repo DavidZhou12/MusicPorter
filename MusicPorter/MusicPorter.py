@@ -2,6 +2,8 @@ import mutagen
 from mutagen.easyid3 import EasyID3
 import io, os, sys
 from operator import itemgetter, attrgetter
+from shutil import copy2
+from codecs import decode
 
 # Items in the mp3List are in tuples with the following order:
 # (mp3FilePath, Title, Album, Artist, Track Number)
@@ -90,6 +92,13 @@ def writeOutput(sortedList):
         for item in sortedList:
             output.write(item[4].ljust(colWidth4) + ' ' + item[1].ljust(colWidth1, '.') + ' ' + item[2].ljust(colWidth2, '.') + ' ' + item[3] + '\n')
 
+# TODO -- Get path working
+def transferFiles(sortedList, path):
+    for item in sortedList:
+        properPath = path.replace('\\', "\\\\")
+        copy2(item[0], "G:\\")
+        copy2(item[0], properPath)
+
 def main():
     # Prepare for transfer
     print("Acquiring MP3 files within the directory...\n")
@@ -104,6 +113,7 @@ def main():
     # Transfer mp3 files to a specified directory
     path = input("Enter the path to transfer the music to: ")
     print("Transfering music to: ", path)
+    transferFiles(sortedMp3Files, path)
 
     print("-- TRANSFER COMPLETE --\n")
 
