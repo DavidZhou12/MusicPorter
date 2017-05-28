@@ -35,17 +35,17 @@ def getSortedList(mp3Files):
             if "title" not in audioFile:
                 audioFile["title"] = [os.path.splitext(mp3FilePath)[0]]
             if "album" not in audioFile:
-                audioFile["album"] = ["Unknown Album"]
+                audioFile["album"] = [u"Unknown Album"]
             if "artist" not in audioFile:
-                audioFile["artist"] = ["Unknown Artist"]
+                audioFile["artist"] = [u"Unknown Artist"]
             if modified_flag == True:
                 audioFile.save(mp3FilePath, v1=2, v2_version = 3)
 
         except mutagen.id3.ID3NoHeaderError:    # If no ID3 tag present, create one
             audioFile = EasyID3()
             audioFile["title"] = [os.path.splitext(mp3FilePath)[0]]
-            audioFile["album"] = ["Unknown Album"]
-            audioFile["artist"] = ["Unknown Artist"]
+            audioFile["album"] = [u"Unknown Album"]
+            audioFile["artist"] = [u"Unknown Artist"]
             audioFile.save(mp3FilePath, v1=2, v2_version = 3)
         sortedList.append((mp3FilePath, audioFile["title"][0], audioFile["album"][0], audioFile["artist"][0]))
     
@@ -70,16 +70,36 @@ def writeOutput(sortedList):
 
     # encoding="utf-8" accounts for text written in other languages
     with io.open("Music Menu.txt", "w", encoding="utf-8") as output:
+
+        # Get padding size for neat formating
+        colWidth1 = 1
+        colWidth2 = 1
+        colWidth4 = 1
         for item in sortedList:
-            output.write(item[4] + ' ' + item[1] + ' ' + item[2] + ' ' + item[3] + '\n')
+            if len(item[1]) > colWidth1:
+                colWidth1 = len(item[1])
+            if len(item[2]) > colWidth2:
+                colWidth2 = len(item[2])
+            if len(item[4]) > colWidth4:
+                colWidth4 = len(item[4])
+        # Padding
+        padding = 2
+        colWidth1 += padding
+        colWidth2 += padding
+        colWidth4 += padding
+
+        for item in sortedList:
+            output.write(item[4].ljust(colWidth4) + ' ' + item[1].ljust(colWidth1, '.') + ' ' + item[2].ljust(colWidth2, '.') + ' ' + item[3] + '\n')
 
 def main():
+    print("Acquiring MP3 files within the directory...\n")
     mp3Files = GetCurrentDirectoryMp3List()
     #print(*mp3Files, sep='\n')
+    print("Sorting MP3 files within the directory...\n")
     sortedMp3Files = getSortedList(mp3Files)
-    print(*sortedMp3Files, sep='\n');
+    #print(*sortedMp3Files, sep='\n');
+    print("Creating list of sorted MP3 files within the directory: \"Music Menu\"\n")
     writeOutput(sortedMp3Files)
-    #print(EasyID3(mp3Files[0]))
 
 if __name__ == "__main__":
     sys.exit(int(main() or 0))
